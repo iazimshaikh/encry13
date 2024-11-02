@@ -1,6 +1,6 @@
 # Password Encryption and Decryption
 
-This Python script allows you to securely store and retrieve passwords for your social media accounts using a custom encryption method based on the ROT13 technique combined with random special characters.
+This Python script allows you to securely store and retrieve passwords for your social media accounts using a custom encryption method based on the ROT13 technique combined with random special characters. This program stores your username and password in a file where username is stored normally as a Key and password is stored as a Value which will be encrypted password using ROT13 encryption technique with combination of random characters. Give it a try !
 
 ## Features
 
