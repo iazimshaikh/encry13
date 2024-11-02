@@ -3,11 +3,26 @@ import string
 import json
 import os
 
-# ROT13 encryption function
-def rotencrypt(inp):
-    char_list = string.ascii_lowercase
-    return "".join([char_list[(char_list.find(char) + 13) % 26] for char in inp])
+# Get the directory of the current program(encry13)
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+pass_file = os.path.join(curr_dir, "passwords.json") #stores the password file in the same encry13 directory
 
+# ROT13 encryption function logic which allows to input upto 26 chars including special chars & symbols
+def rotencrypt(inp):
+    def rotate_char(c):
+        if c.islower():
+            return chr((ord(c) - ord('a') + 13) % 26 + ord('a'))
+        elif c.isupper():
+            return chr((ord(c) - ord('A') + 13) % 26 + ord('A'))
+        elif c.isdigit():
+            return c  # Keep digits as they are
+        else:
+            # Keep special characters and spaces unchanged
+            return c
+
+    return ''.join(rotate_char(c) for c in inp)
+
+#Encryption function for adding random chars with Rot13 encryption
 def encrypt_password(password):
     rotinp = rotencrypt(password)
     mylist = list(rotinp)
@@ -22,29 +37,30 @@ def encrypt_password(password):
     enc_str = ''.join(mylist)
     return enc_str
 
+#Decryption function
 def decrypt_password(encrypted_password):
     inppass = encrypted_password[8:-10]
     rtpass = (inppass[-1:] + inppass[:-1])
     final_pass = rotencrypt(rtpass)
     return final_pass
 
-# Store passwords in a file
+#Function for storing the username and password as key:value pair in the file
 def store_password(account, encrypted_password):
     try:
-        with open("passwords.json", "r") as file:
+        with open(pass_file, "r") as file:
             passwords = json.load(file)
     except FileNotFoundError:
         passwords = {}
 
     passwords[account] = encrypted_password
 
-    with open("passwords.json", "w") as file:
+    with open(pass_file, "w") as file:
         json.dump(passwords, file)
 
-# Retrieve a password
+#Function which will retrieve the password as per the username
 def retrieve_password(account):
     try:
-        with open("passwords.json", "r") as file:
+        with open(pass_file, "r") as file:
             passwords = json.load(file)
             encrypted_password = passwords.get(account)
             if encrypted_password:
@@ -56,13 +72,16 @@ def retrieve_password(account):
         print("No passwords stored yet.")
         return None
 
-def main_menu():
+#Main Menu
+def encry_main():
     print('''                ███████╗███╗   ██╗ ██████╗██████╗ ██╗   ██╗ ██╗██████╗
                 ██╔════╝████╗  ██║██╔════╝██╔══██╗╚██╗ ██╔╝███║╚════██╗
                 █████╗  ██╔██╗ ██║██║     ██████╔╝ ╚████╔╝ ╚██║ █████╔╝
                 ██╔══╝  ██║╚██╗██║██║     ██╔══██╗  ╚██╔╝   ██║ ╚═══██╗
                 ███████╗██║ ╚████║╚██████╗██║  ██║   ██║    ██║██████╔╝
-                ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝   ╚═╝    ╚═╝╚═════╝ ''')
+                ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝   ╚═╝    ╚═╝╚═════╝
+                                @iazimshaikh (Azim Shaikh)''')
+
     while True:
         choice = input('''\n1. Encrypt and Store Password
 2. Retrieve Password
@@ -71,7 +90,10 @@ def main_menu():
 
         if choice == '1':
             account = input("Enter the username of account(any social media account): ")
-            password = input("Enter the password to encrypt and store in a file(only characters & less than 8 characters): ")
+            password = input("Enter the password to encrypt and store in a file (up to 26 characters, including spaces and special characters): ")
+            if len(password) > 26:
+                print("Password must be 26 characters or less. Please try again.")
+                continue
             encrypted_password = encrypt_password(password)
             store_password(account, encrypted_password)
             print("Password stored successfully!")
@@ -89,4 +111,4 @@ def main_menu():
             print("Invalid choice.")
 
 if __name__ == "__main__":
-    main_menu()
+    encry_main()
