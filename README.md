@@ -12,8 +12,8 @@ This Python script allows you to securely store and retrieve passwords for your 
 
 1. **Encrypt Password:**
   - Select option `1` from the main menu.
-  - Enter the account name (e.g., any username which you have used at the time of encryption , ex-"myinstagram").
-  - Enter the password to encrypt (only characters, less than 8 characters).
+  - Enter the account name (e.g., any username for which you want to store your password, ex-"myinstagram").
+  - Enter the password to encrypt (Including special characters & numbers, allowed upto 26 characters).
   - The script will generate an encrypted password and store it.
 
 
@@ -39,7 +39,7 @@ All passwords are stored in a JSON file, allowing for easy retrieval.
 1. Clone the repository and ready to go:
    ```bash
    git clone https://github.com/iazimshaikh/encry13.git
-   cd your-repository
+   cd encry13
    python encry13.py
 
 ## Note
